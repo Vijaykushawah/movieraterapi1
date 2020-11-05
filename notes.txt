@@ -1,0 +1,78 @@
+PROJECTSETUP
+1.python -m venv MovieRaterApivenv
+2.pip install django
+3.pip install djangorestframework
+4.pip install pillow
+5.django-admin startproject movierater .
+6.django-admin startapp api
+7.python manage.py runserver
+8.python manage.py makemigrations
+9.python manage.py migrate
+10.python manage.py createsuperuser
+
+
+ROUTER CREATION
+1.Register api,rest-framework and migrate it.
+2.created urls.py in api and included  from main urls.py.We will right all api urls here.
+3.from rest_framework import routers
+router=routers.DefaultRouter()
+path('', include(router.urls)),
+
+MODELS
+1.Created Movie,Rating using Foreign key so that multiple user can rate same movie.
+2.We imported core.validators for maxvalue,minvalue rating
+3.We defined unique_together so that sameuser can rate same movie only once.
+4.Apply migration
+5.register our model in admin.py
+
+SERIALIZERS
+1.Created ourSerilizer using drf serializer same as we did earlier in forms.
+2.created ourViewsets using drf viewset to querying data and serializer class define which things is accessible
+3.Now we will map our viewset to router url
+4.viewset has only one serializer so don't use tuple
+
+TESTING API
+1.Open PostMan
+To create data 
+method-POST
+select Body
+select form-data
+type key and value 
+if post method then url ends with slash
+method-PUT to update existing record typed in url
+method-DELETE to delete record typed in url
+2.Rating url has dependent filed movie & user so pass id of them 
+3.PUT is not allowed in dependent field.
+
+CUSTOM METHODS FOR RATING
+1.Goto-definition installed & restarted
+2.autocomplete-python go to c drive atom lib jedi folder and copied to latest version and in settings paste our virtual env sites-package path in extra field of atom.
+Greate its working!
+
+Defined method in our viewset and access that return Response
+define method in model and add in fields of serilizer so that it will be available for front end. user
+
+AUTHENTICATION
+1.add rest_framework_authtoken and migrate and generate token for user from admin page.
+2.urls.py add url for auth/ for obtain_auth_token
+3.method POST type url and type in body username -vijay password working got token
+4. password hiding extra_kwargs = {'password':{'write_only':True,'required':True}}
+5.We overrided method create of user serializer to add validation.
+6.override create/update method of ourserializer to stop update,create rating from another place.
+
+TOKEN AUTOMATICALLY GENERATION
+1.while creating user, we overrided create method of UserSerializer added validation & created Token also and return user.
+2.In model we can add field,method & same we have to add in serializer fields.
+3.in our veiwset we overrieded update/create method to avoid restrict some function.
+4.in our viewset we defined custom method using decorator that will be called for each specified object.
+5.We added authenticatin and permission class in our viewset authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+ERROR ACCESSING FROM DIFFERENT DOMAIN
+1.pip install django-cors-headers
+2.add in installed apps
+3.CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080"
+]
+4.'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
